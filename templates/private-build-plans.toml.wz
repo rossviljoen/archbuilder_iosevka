@@ -1,76 +1,16 @@
-@require(charvars, italic_overrides, spacings, custom_weights, use_custom_weights, contextual_widths)
-@(
-    contextual_widths = str(contextual_widths).lower()
-)\
-@for spacing in spacings:
-@(
-    if spacing == 'normal':
-        plan = 'IosevkaCustom'
-        family = 'Iosevka Custom'
-    elif spacing == 'quasi-proportional':
-        plan = 'IosevkaQpCustom'
-        family = 'Iosevka QP Custom'
-    elif spacing == 'quasi-proportional-extension-only':
-        plan = 'IosevkaQpeCustom'
-        family = 'Iosevka QPE Custom'
-    elif spacing == 'fontconfig-mono':
-        plan = 'IosevkaFcmCustom'
-        family = 'Iosevka FCM Custom'
-    else:
-        plan = f"Iosevka{spacing.title()}Custom"
-        family = f"Iosevka {spacing.title()} Custom"
-)\
-[buildPlans.@{plan}]
-family = "@family"
-exportGlyphNames = false
-buildTextureFeature = @contextual_widths
-spacing = "@spacing"
+### See https://github.com/be5invis/Iosevka/blob/master/doc/custom-build.md for comprehensive
+### documentation of the options in this file
 
-[buildPlans.@{plan}.ligations]
-inherits = "dlig"
-# disables = []
-# enables = []
+[buildPlans.IosevkaCustom]      # <IosevkaCustom> is your plan name
+family = "Iosevka Custom"       # Font menu family name
+spacing = "normal"              # Optional; Values: `normal`, `term`, `fontconfig-mono`, or `fixed`
+serifs = "slab"                 # Optional; Values: `sans` or `slab`
+exportGlyphNames = false        # Set this to true for ligature support in Kitty (increased file size)
+noLigation = true               # Disable all ligatures
 
-# [buildPlans.@{plan}.variants]
-# inherits = "ss16"
+[buildPlans.IosevkaCustom.variants]
+inherits = "ss15"               # IBM Plex Mono Style
 
-[buildPlans.@{plan}.variants.design]
-@for char, style in charvars.items():
-@char = "@style"
-@end
+[buildPlans.IosevkaCustom.variants.design]
+apl-form = 'enable'  # Enable harmonized alternate forms APL operators
 
-# Override above variants for each slope:
-# [buildPlans.@{plan}.variants.upright]
-[buildPlans.@{plan}.variants.italic]
-@for char, style in italic_overrides.items():
-@char = "@style"
-@end
-
-@if use_custom_weights:
-@for name, weight in custom_weights.items():
-[buildPlans.@{plan}.weights.@{name}]
-shape = @weight['override']
-menu = @weight['default']
-css = @weight['default']
-
-@end
-@end
-[buildPlans.@{plan}.slopes.Upright]
-angle = 0
-shape = "upright"
-menu  = "upright"
-css   = "normal"
-
-# [buildPlans.@{plan}.slopes.Oblique]
-# angle = 9.4
-# shape = "oblique"
-# menu  = "oblique"
-# css   = "oblique"
-
-[buildPlans.@{plan}.slopes.Italic]
-angle = 9.4
-shape = "italic"
-menu  = "italic"
-css   = "italic"
-
-@end
